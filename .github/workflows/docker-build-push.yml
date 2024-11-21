@@ -39,5 +39,5 @@ jobs:
       # (Opcional) Etiquetar también como "latest"
       - name: Tag as latest
         run: |
-          docker tag gabrieeelsp/mundose-app:${{ env.VERSION }} your-dockerhub-username/your-repo-name:latest
-          docker push gabrieeelsp/mundose-app/your-repo-name:latest
+          docker tag gabrieeelsp/mundose-app:${{ env.VERSION }} gabrieeelsp/mundose-app:latest
+          docker push gabrieeelsp/mundose-app:latest
