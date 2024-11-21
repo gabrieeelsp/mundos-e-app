@@ -13,6 +13,11 @@ jobs:
       # Clonar el repositorio
       - name: Checkout code
         uses: actions/checkout@v3
+      
+      # Leer el número de versión
+      - name: Read version
+        id: vars
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
       # Iniciar sesión en Docker Hub
       - name: Log in to Docker Hub
@@ -24,9 +29,15 @@ jobs:
       # Construir la imagen Docker
       - name: Build Docker image
         run: |
-          docker build -t gabrieeelsp/mundose-app:latest .
+          docker build -t gabrieeelsp/mundose-app:${{ env.VERSION }} .
 
-      # Subir la imagen Docker a Docker Hub
+      # Subir la imagen a Docker Hub
       - name: Push Docker image
         run: |
-          docker push gabrieeelsp/mundose-app:latest
+          docker push your-dockerhub-username/your-repo-name:${{ env.VERSION }}
+
+      # (Opcional) Etiquetar también como "latest"
+      - name: Tag as latest
+        run: |
+          docker tag your-dockerhub-username/your-repo-name:${{ env.VERSION }} your-dockerhub-username/your-repo-name:latest
+          docker push your-dockerhub-username/your-repo-name:latest
