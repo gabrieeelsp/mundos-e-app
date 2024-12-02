@@ -11,8 +11,14 @@ RUN sed -i "s/{{VERSION}}/$(cat /VERSION)/g" /usr/share/nginx/html/index.html
 # Copiar la configuración personalizada de Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Exponer el puerto 80
-EXPOSE 80
+# Descargar e instalar el Nginx Prometheus Exporter
+RUN apk add --no-cache wget && \
+    wget https://github.com/nginxinc/nginx-prometheus-exporter/releases/download/v0.10.0/nginx-prometheus-exporter-linux-amd64 && \
+    chmod +x nginx-prometheus-exporter-linux-amd64 && \
+    mv nginx-prometheus-exporter-linux-amd64 /usr/bin/nginx-prometheus-exporter
 
-# Comando por defecto para correr Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Exponer los puertos necesarios
+EXPOSE 80 9113
+
+# Comando por defecto para ejecutar Nginx y el Exportador
+CMD ["sh", "-c", "nginx -g 'daemon off;' & nginx-prometheus-exporter -nginx.scrape-uri=http://127.0.0.1/nginx_status"]
