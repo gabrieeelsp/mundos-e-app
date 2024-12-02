@@ -12,10 +12,12 @@ RUN sed -i "s/{{VERSION}}/$(cat /VERSION)/g" /usr/share/nginx/html/index.html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Descargar e instalar el Nginx Prometheus Exporter
-RUN apk add --no-cache wget && \
-    wget https://github.com/nginxinc/nginx-prometheus-exporter/releases/download/v0.10.0/nginx-prometheus-exporter-linux-amd64 && \
-    chmod +x nginx-prometheus-exporter-linux-amd64 && \
-    mv nginx-prometheus-exporter-linux-amd64 /usr/bin/nginx-prometheus-exporter
+RUN apk add --no-cache wget tar && \
+    wget https://github.com/nginxinc/nginx-prometheus-exporter/releases/download/v1.3.0/nginx-prometheus-exporter_1.3.0_linux_amd64.tar.gz && \
+    tar -xvf nginx-prometheus-exporter_1.3.0_linux_amd64.tar.gz && \
+    mv nginx-prometheus-exporter /usr/bin/nginx-prometheus-exporter && \
+    chmod +x /usr/bin/nginx-prometheus-exporter && \
+    rm -f nginx-prometheus-exporter_1.3.0_linux_amd64.tar.gz
 
 # Exponer los puertos necesarios
 EXPOSE 80 9113
